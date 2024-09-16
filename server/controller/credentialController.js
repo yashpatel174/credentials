@@ -14,13 +14,13 @@ const register = async (req, res) => {
     const { email, password } = req.body;
     requiredFields(res, { email }, { password });
 
-    const existingUser = await registration.find({ email });
+    const existingUser = await registration.findOne({ email });
     if (existingUser) return response.exist(res);
 
     const newUser = new registration({ email, password });
     await newUser.save();
 
-    response.success(res, "User registered successfully", newUser);
+    response.success(res, "User registered successfully", { email: newUser.email, password: newUser.password });
   } catch (error) {
     if (error.code === 11000) {
       return response.error(error, "Duplocate key.");
@@ -46,11 +46,21 @@ const login = async (req, res) => {
       if (error) {
         return response.error(res, error, "Token is not stored in the session storage.");
       }
+      res.json({ token: token });
     });
 
-    response.success(res, "User logged in successfully!", { token: token });
+    // response.success(res, "User logged in successfully!", { email: user.email, password: user.password });
   } catch (error) {
     response.error(res, error, "Error while logging in.");
+  }
+};
+
+const dashboard = async (req, res) => {
+  try {
+    const user = await registration.find();
+    response.success(res, "Welcome to the dashboard!", { user: user.email });
+  } catch (error) {
+    response.error(res, error, "Try again.");
   }
 };
 
@@ -114,4 +124,4 @@ const resetPassword = async (req, res) => {
   }
 };
 
-export { register, login, logout, requestPasswordReset, resetPassword };
+export { register, login, dashboard, logout, requestPasswordReset, resetPassword };

@@ -1,5 +1,13 @@
 import express from "express";
-import { register, login, logout, requestPasswordReset, resetPassword } from "../controller/credentialController.js";
+import {
+  register,
+  login,
+  dashboard,
+  logout,
+  requestPasswordReset,
+  resetPassword,
+} from "../controller/credentialController.js";
+import { authMiddleware } from "../middleware/authMiddelware.js";
 const router = express.Router();
 
 router.post("/register", register);
@@ -7,5 +15,6 @@ router.post("/login", login);
 router.post("/logout", logout);
 router.post("/forgot-password", requestPasswordReset);
 router.post("/reset-password", resetPassword);
+router.post("/dashboard", authMiddleware, dashboard);
 
 export default router;

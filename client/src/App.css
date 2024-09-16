@@ -1,38 +1,83 @@
-.App {
-  text-align: center;
+.gradient-border {
+  position: relative;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    #e0e0e0 0%,
+    gray 10%,
+    #e0e0e0 20%,
+    gray 30%,
+    #e0e0e0 40%,
+    gray 50%,
+    #e0e0e0 60%,
+    gray 70%,
+    #e0e0e0 80%,
+    gray 90%,
+    #e0e0e0 100%
+  );
+  background-size: 200% 100%;
+  animation: gradient-animation 20s linear infinite;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: none;
 }
 
-.App-link {
-  color: #61dafb;
+.card {
+  background-color: #333;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.card-body {
+  position: relative;
+  padding: 20px;
+  border: 5px solid transparent;
+  border-image: linear-gradient(45deg, white, gray) 1;
+  animation: rotateBorder 5s linear infinite;
+}
+
+@keyframes rotateBorder {
+  0% {
+    border-image-source: linear-gradient(0deg, white, gray);
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    border-image-source: linear-gradient(180deg, white, gray);
   }
+  100% {
+    border-image-source: linear-gradient(360deg, white, gray);
+  }
+}
+
+.custom-focus {
+  border: 1px solid #444;
+}
+
+.custom-focus:focus {
+  border-color: #000;
+}
+
+.form-control {
+  background-color: #000;
+  color: #fff;
+}
+
+.btn-warning {
+  background-color: #ff6600;
+  border-color: #ff6600;
+}
+
+.btn-warning:hover {
+  background-color: #ff6600;
+  border-color: #ff6600;
 }
