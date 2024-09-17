@@ -1,3 +1,60 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.stars::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, #fff 1px, transparent 1px) center/0.5em 0.5em;
+  animation: stars 60s linear infinite;
+}
+
+@keyframes stars {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.stars {
+  animation: spin 60s linear infinite;
+}
+
 .gradient-border {
   position: relative;
   height: 3px;
@@ -42,6 +99,15 @@ select:focus {
 .card-body {
   position: relative;
   padding: 20px;
+  border: 5px solid transparent;
+  border-image: linear-gradient(45deg, white, gray) 1;
+  animation: rotateBorder 5s linear infinite;
+}
+
+.card-body-2 {
+  padding: 10px 20px;
+  margin: auto;
+  position: relative;
   border: 5px solid transparent;
   border-image: linear-gradient(45deg, white, gray) 1;
   animation: rotateBorder 5s linear infinite;

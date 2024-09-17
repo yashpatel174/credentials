@@ -1,28 +1,23 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const Signup = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    const user = {
-      email: email,
-      password: password,
-    };
-
     try {
-      const response = await axios.post("http://localhost:8080/user/register", user);
-      setMessage(response.data.message);
+      const response = await axios.post("http://localhost:8080/user/register", { email, password });
+      toast.success(response.data.message);
     } catch (error) {
       if (error.response) {
-        setMessage(error.response.data.message || "Registration failed");
+        toast.error(error.response.data.message);
       } else {
-        setMessage("Server error. Please try again later.");
+        toast.error("Server error. Please try again later.");
       }
     }
   };
@@ -77,7 +72,10 @@ const Signup = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                       />
-                      <p className="text-black text-end">
+                      <p
+                        className="text-black text-end"
+                        style={{ marginTop: "5px" }}
+                      >
                         Already have an account?{" "}
                         <Link
                           to="/login"
@@ -106,4 +104,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Register;

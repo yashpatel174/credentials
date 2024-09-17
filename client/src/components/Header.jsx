@@ -1,7 +1,21 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "./AuthProvider";
 
 const Header = () => {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const login = location.pathname === "/login";
+  const register = location.pathname === "/register";
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    logout();
+    navigate("/login");
+  };
+
+  const isLoggedIn = !!localStorage.getItem("token");
   return (
     <>
       <div
@@ -12,20 +26,36 @@ const Header = () => {
           <div className="fs-2">
             {" "}
             <i> Yash</i>
-            </div>
+          </div>
           <div className="inline-block">
-            <Link
-              to="/login"
-              className="text-white text-decoration-none"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="text-white text-decoration-none ms-3"
-            >
-              Signup
-            </Link>
+            {isLoggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="text-white text-decoration-none"
+                style={{ background: "none", border: "none", cursor: "pointer" }}
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                {login && (
+                  <Link
+                    to="/register"
+                    className="text-white text-decoration-none"
+                  >
+                    Register
+                  </Link>
+                )}
+                {register && (
+                  <Link
+                    to="/login"
+                    className="text-white text-decoration-none ms-3"
+                  >
+                    Login
+                  </Link>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

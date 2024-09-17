@@ -13,6 +13,8 @@ const userRegister = new mongoose.Schema(
       type: String,
       required: true,
     },
+    resetToken: String,
+    resetTokenExpiration: Date,
   },
   { versionKey: false }
 );

@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import { Link, useNavigate, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthProvider";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -11,12 +12,39 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       const response = await axios.post("http://localhost:8080/user/login", { email, password });
-      login(response.data.token);
-      navigate("/dashboard");
+      if (!response) return alert.error("Enter the credentials.");
+      if (response && response.data.token) {
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        login(token);
+        toast.success(response.message);
+        navigate("/dashboard");
+      } else {
+        toast.error(response.message);
+      }
     } catch (error) {
-      alert("Login failed");
+      if (error.response && error.response.status === 401) {
+        toast.error(error.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    try {
+      if (!email) {
+        alert(response.message);
+        return;
+      }
+      const response = await axios.post("http://localhost:8080/user/forgot-password", { email });
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
   };
 
@@ -76,7 +104,7 @@ const Login = () => {
                     >
                       Don't you have account?{" "}
                       <Link
-                        to="/signup"
+                        to="/register"
                         className=" text-decoration-none"
                       >
                         Register
@@ -91,11 +119,12 @@ const Login = () => {
                       Login
                     </button>
                     <button
-                      type="submit"
+                      type="button"
+                      onClick={handleForgotPassword}
                       className="btn btn-warning w-100 bg-black text-white border-2 border-white"
                       style={{ marginLeft: "20px" }}
                     >
-                      Fogot password
+                      Forgot password
                     </button>
                   </div>
                 </form>

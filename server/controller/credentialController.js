@@ -48,8 +48,6 @@ const login = async (req, res) => {
       }
       res.json({ token: token });
     });
-
-    // response.success(res, "User logged in successfully!", { email: user.email, password: user.password });
   } catch (error) {
     response.error(res, error, "Error while logging in.");
   }
@@ -58,7 +56,7 @@ const login = async (req, res) => {
 const dashboard = async (req, res) => {
   try {
     const user = await registration.find();
-    response.success(res, "Welcome to the dashboard!", { user: user.email });
+    response.success(res, "Welcome to the dashboard!", user[0].email);
   } catch (error) {
     response.error(res, error, "Try again.");
   }
@@ -90,8 +88,18 @@ const requestPasswordReset = async (req, res) => {
     const user = await registration.findOne({ email });
     if (!user) return response.notExist(res);
 
-    const token = JWT.sign({ _id: user._id }, process.env.SECRET_KEY, { expiresIn: "5m" });
-    const resetLink = `${process.env.SYSTEM_IP}/user/reset-password/${token}`;
+    const token = JWT.sign({ _id: user._id }, process.env.SECRET_KEY, { expiresIn: "2m" });
+    const resetLink = `http://localhost:3000/reset-password/${token}`;
+
+    await registration.findOneAndUpdate(
+      { email },
+      {
+        $set: {
+          resetToken: token,
+          resetTokenExpiration: Date.now() + 2 * 60 * 1000,
+        },
+      }
+    );
 
     await transporter.sendMail({
       from: process.env.EMAIL,
@@ -99,7 +107,7 @@ const requestPasswordReset = async (req, res) => {
       subject: "Password Reset",
       text: `Click on the following link to reset your password: ${resetLink}`,
     });
-    response.success(res, "Link has been sent successfully!");
+    response.success(res, "Link has been sent successfully!", { token: token });
   } catch (error) {
     response.error(res, error, "Error while sending mail.");
   }
@@ -107,18 +115,19 @@ const requestPasswordReset = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
-    const token = req.header("Token");
+    const token = req.params.token;
     const { newPassword, confirmPassword } = req.body;
     requiredFields(res, { token }, { newPassword }, { confirmPassword });
 
     const decoded = await promisify(JWT.verify)(token, process.env.SECRET_KEY);
     const user = await registration.findById(decoded._id);
-    if (!user) return response.notExist();
+    if (!user) return response.notExist(res);
 
     if (newPassword !== confirmPassword) return response.notMatch(res);
-    user.password = await newPassword;
+    user.password = newPassword;
 
     await user.save();
+    response.success(res, "Password has been reset successfully.");
   } catch (error) {
     response.error(res, error, "Invalid or expired token.");
   }
