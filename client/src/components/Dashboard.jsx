@@ -29,30 +29,29 @@ const Dashboard = () => {
   return (
     <>
       <div className="bg-black text-white d-flex justify-content-center align-items-center vh-100">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-md-6 col-lg-4">
-              <div
-                className="card text-black border-0 shadow-lg"
-                style={{ backgroundColor: "#000" }}
-              >
-                <div className="card-body-2">
-                  <h4
-                    className="text-center mb-4"
-                    style={{ color: "#ff803e" }}
-                  >
-                    <i>Welcome to the dashboard!</i> <br />
-                    <h2
-                      className="text-center mb-4"
-                      style={{ color: "#ff803e" }}
-                    >
-                      Your email is <br />
-                      <h1 className="text-center mb-4 text-white">{data}</h1>
-                    </h2>
-                  </h4>
-                </div>
-              </div>
-            </div>
+        <div
+          className="card text-black border-0 shadow-lg"
+          style={{ backgroundColor: "#ff803e", display: "inline-block", whiteSpace: "nowrap" }}
+        >
+          <div className="card-body-2 bg-black d-flex flex-column align-items-center justify-content-center">
+            <p
+              className="text-center fs-4 fs-md-5 fs-lg-6"
+              style={{ color: "#ff803d" }}
+            >
+              Welcome to the dashboard!
+            </p>
+            <p
+              className="text-center fs-5 fs-md-6 fs-lg-7"
+              style={{ color: "#ff803d" }}
+            >
+              Your email is
+            </p>
+            <p
+              className="text-center fs-3 fs-md-4 fs-lg-5 text-white"
+              style={{ whiteSpace: "nowrap" }}
+            >
+              {data}
+            </p>
           </div>
         </div>
       </div>

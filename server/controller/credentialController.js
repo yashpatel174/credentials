@@ -46,7 +46,7 @@ const login = async (req, res) => {
       if (error) {
         return response.error(res, error, "Token is not stored in the session storage.");
       }
-      res.json({ token: token });
+      res.json({ message: "User logged in successfully!", token: token });
     });
   } catch (error) {
     response.error(res, error, "Error while logging in.");
@@ -55,8 +55,8 @@ const login = async (req, res) => {
 
 const dashboard = async (req, res) => {
   try {
-    const user = await registration.find();
-    response.success(res, "Welcome to the dashboard!", user[0].email);
+    const user = await req.user;
+    response.success(res, "Welcome to the dashboard!", user.email);
   } catch (error) {
     response.error(res, error, "Try again.");
   }
@@ -107,9 +107,9 @@ const requestPasswordReset = async (req, res) => {
       subject: "Password Reset",
       text: `Click on the following link to reset your password: ${resetLink}`,
     });
-    response.success(res, "Link has been sent successfully!", { token: token });
+    response.success(res, { token: token });
   } catch (error) {
-    response.error(res, error, "Error while sending mail.");
+    response.error(res, error, { message: "Error while sending mail." });
   }
 };
 
@@ -127,9 +127,9 @@ const resetPassword = async (req, res) => {
     user.password = newPassword;
 
     await user.save();
-    response.success(res, "Password has been reset successfully.");
+    response.success(res, { message: "Password has been reset successfully." });
   } catch (error) {
-    response.error(res, error, "Invalid or expired token.");
+    response.error(res, error, { message: "Invalid or expired token." });
   }
 };
 

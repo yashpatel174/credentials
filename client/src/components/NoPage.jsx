@@ -1,6 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const NoPage = () => {
+  const navigate = useNavigate();
+  const redirect = () => {
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
+  };
+  redirect();
   return (
     <>
       <div className="bg-black text-white d-flex justify-content-center align-items-center vh-100">

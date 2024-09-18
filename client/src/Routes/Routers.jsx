@@ -15,8 +15,8 @@ import NoPage from "../components/NoPage";
 const Routers = () => {
   return (
     <AuthProvider>
-      {/* <Stars /> */}
       <Router>
+        <Stars numStars={100} />
         <Header />
         <Routes>
           <Route
@@ -44,7 +44,7 @@ const Routers = () => {
             element={<NoPage />}
           />
         </Routes>
-        {/* <Footer /> */}
+        <Footer />
       </Router>
     </AuthProvider>
   );

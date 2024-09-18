@@ -4,55 +4,36 @@ body {
   overflow: hidden;
 }
 
-.stars {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: -1;
-}
-
-.stars::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, #fff 1px, transparent 1px) center/0.5em 0.5em;
-  animation: stars 60s linear infinite;
-}
-
-@keyframes stars {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 100% 100%;
-  }
-}
-
 .star {
   position: absolute;
+  background-color: white;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
-  pointer-events: none;
+  animation:
+    twinkle 1.5s infinite alternate,
+    move 30s linear infinite;
 }
 
-@keyframes spin {
+@keyframes twinkle {
   from {
-    transform: rotate(0deg);
+    opacity: 0.5;
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
   }
 }
 
-.stars {
-  animation: spin 60s linear infinite;
+@keyframes move {
+  0% {
+    transform: rotateX(-30deg) rotateY(30deg) translateZ(150px);
+  }
+  100% {
+    transform: rotateX(330deg) rotateY(-330deg) translateZ(150px);
+  }
+}
+
+.Stars {
+  position: relative;
+  overflow: hidden;
 }
 
 .gradient-border {
@@ -60,17 +41,17 @@ body {
   height: 3px;
   background: linear-gradient(
     to right,
-    #e0e0e0 0%,
-    gray 10%,
-    #e0e0e0 20%,
-    gray 30%,
-    #e0e0e0 40%,
-    gray 50%,
-    #e0e0e0 60%,
-    gray 70%,
-    #e0e0e0 80%,
-    gray 90%,
-    #e0e0e0 100%
+    #ffffff 0%,
+    #555555 10%,
+    #ffffff 20%,
+    #555555 30%,
+    #ffffff 40%,
+    #555555 50%,
+    #ffffff 60%,
+    #555555 70%,
+    #ffffff 80%,
+    #555555 90%,
+    #ffffff 100%
   );
   background-size: 200% 100%;
   animation: gradient-animation 20s linear infinite;
@@ -85,11 +66,8 @@ body {
   }
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  box-shadow: none;
+input:focus {
+  border: 2px solid black;
 }
 
 .card {
@@ -100,50 +78,48 @@ select:focus {
   position: relative;
   padding: 20px;
   border: 5px solid transparent;
-  border-image: linear-gradient(45deg, white, gray) 1;
+  border-image: linear-gradient(45deg, #ffffff, #555555, #ffffff, #555555) 1;
   animation: rotateBorder 5s linear infinite;
 }
 
 .card-body-2 {
-  padding: 10px 20px;
+  padding: 20px;
   margin: auto;
   position: relative;
   border: 5px solid transparent;
-  border-image: linear-gradient(45deg, white, gray) 1;
+  border-image: linear-gradient(45deg, #ffffff, #555555) 1;
   animation: rotateBorder 5s linear infinite;
 }
 
 @keyframes rotateBorder {
   0% {
-    border-image-source: linear-gradient(0deg, white, gray);
+    border-image-source: linear-gradient(0deg, #ffffff, #555555, #ffffff, #555555);
   }
   50% {
-    border-image-source: linear-gradient(180deg, white, gray);
+    border-image-source: linear-gradient(180deg, #ffffff, #555555, #ffffff, #555555);
   }
   100% {
-    border-image-source: linear-gradient(360deg, white, gray);
+    border-image-source: linear-gradient(360deg, #ffffff, #555555, #ffffff, #555555);
   }
-}
-
-.custom-focus {
-  border: 1px solid #444;
-}
-
-.custom-focus:focus {
-  border-color: #000;
-}
-
-.form-control {
-  background-color: #000;
-  color: #fff;
 }
 
 .btn-warning {
-  background-color: #ff6600;
-  border-color: #ff6600;
+  background-color: #ff803d;
+  border-color: #ff803d;
 }
 
-.btn-warning:hover {
-  background-color: #ff6600;
-  border-color: #ff6600;
+.mt-xs-10px {
+  margin-top: 10px !important;
+}
+
+.mt-sm-0px {
+  margin-top: 0px !important;
+}
+
+.ml-sm-20px {
+  margin-left: 20px !important;
+}
+
+.ml-md-0px {
+  margin-left: 0px !important;
 }

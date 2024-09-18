@@ -1,6 +1,5 @@
-import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
-import { Navigate, Route } from "react-router-dom";
+import React, { useContext } from "react";
+import { Navigate } from "react-router-dom";
 import { AuthContext } from "./AuthProvider";
 
 const Private = ({ element: Component, ...rest }) => {

@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useContext, useState } from "react";
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "./AuthProvider";
 import { toast } from "react-toastify";
+import { AuthContext } from "./AuthProvider";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,15 +15,15 @@ const Login = () => {
 
     try {
       const response = await axios.post("http://localhost:8080/user/login", { email, password });
-      if (!response) return alert.error("Enter the credentials.");
+      if (!email) return toast.error("Enter your email id.");
       if (response && response.data.token) {
         const token = response.data.token;
         localStorage.setItem("token", token);
         login(token);
-        toast.success(response.message);
+        toast.success(response.data.message);
         navigate("/dashboard");
       } else {
-        toast.error(response.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -36,11 +36,13 @@ const Login = () => {
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
+
+    if (!email) {
+      toast.error("Email field is required");
+      return;
+    }
+
     try {
-      if (!email) {
-        alert(response.message);
-        return;
-      }
       const response = await axios.post("http://localhost:8080/user/forgot-password", { email });
       toast.success(response.data.message);
     } catch (error) {
@@ -52,7 +54,7 @@ const Login = () => {
     <div className="bg-black text-white d-flex justify-content-center align-items-center vh-100">
       <div className="container">
         <div className="row justify-content-center">
-          <div className="col-md-6 col-lg-4">
+          <div className="col-12 col-md-8 col-lg-6 col-xl-4">
             <div
               className="card text-black border-0 shadow-lg"
               style={{ backgroundColor: "#ff803e" }}
@@ -74,7 +76,7 @@ const Login = () => {
                     </label>
                     <input
                       type="text"
-                      className="form-control bg-white text-black custom-focus"
+                      className="form-control bg-white text-black"
                       id="email"
                       name="email"
                       value={email}
@@ -91,7 +93,7 @@ const Login = () => {
                     </label>
                     <input
                       type="password"
-                      className="form-control bg-white text-black custom-focus"
+                      className="form-control bg-white text-black"
                       id="password"
                       name="password"
                       value={password}
@@ -99,30 +101,29 @@ const Login = () => {
                       required
                     />
                     <p
-                      className="text-black text-end"
+                      className="text-black text-start text-sm-end"
                       style={{ marginTop: "5px" }}
                     >
-                      Don't you have account?{" "}
+                      Don't you have an account?{" "}
                       <Link
                         to="/register"
-                        className=" text-decoration-none"
+                        className="text-decoration-none"
                       >
                         Register
                       </Link>{" "}
                     </p>
                   </div>
-                  <div className="text-center d-flex">
+                  <div className="text-center d-flex flex-column flex-sm-row">
                     <button
                       type="submit"
-                      className="btn btn-warning w-100 bg-black text-white border-2 border-white"
+                      className="btn btn-warning w-100 bg-black text-white border-2 border-white mb-2 mb-sm-0"
                     >
                       Login
                     </button>
                     <button
                       type="button"
                       onClick={handleForgotPassword}
-                      className="btn btn-warning w-100 bg-black text-white border-2 border-white"
-                      style={{ marginLeft: "20px" }}
+                      className="btn btn-warning w-100 bg-black text-white border-2 border-white mt-2 mt-sm-0 ms-sm-2"
                     >
                       Forgot password
                     </button>
