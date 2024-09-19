@@ -33,10 +33,15 @@ const Header = () => {
         <div className="d-none d-md-flex w-75 justify-content-between align-items-center m-auto text-white">
           <Link
             to="/"
-            className="fs-2 text-white text-decoration-none"
+            className="d-flex flex-column justify-content-center align-items-center text-decoration-none"
+            style={{ height: "50px", lineHeight: "1" }}
           >
-            <i> Yash</i>
+            <span className="fs-5 fs-md-4 fs-lg-3 fw-bold text-white">
+              <i> Registration </i>
+            </span>
+            <span className="fs-6 fs-md-5 fw-light text-white">Pvt. Ltd.</span>
           </Link>
+
           <div className="d-flex align-items-center">
             {homePage ? (
               <>
@@ -91,9 +96,13 @@ const Header = () => {
         <nav className="d-md-none w-100 d-flex justify-content-between align-items-center">
           <Link
             to="/"
-            className="fs-2 text-white text-decoration-none ms-3"
+            className="d-flex flex-column justify-content-center align-items-center text-decoration-none ms-2"
+            style={{ height: "50px", lineHeight: "1" }}
           >
-            <i>Yash</i>
+            <span className="fs-5 fs-md-4 fs-lg-3 fw-bold text-white">
+              <i> Registration </i>
+            </span>
+            <span className="fs-6 fs-md-5 fw-light text-white">Pvt. Ltd.</span>
           </Link>
           <button
             onClick={toggleNav}

@@ -28,7 +28,10 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="bg-black text-white d-flex justify-content-center align-items-center vh-100">
+      <div
+        className="bg-black text-white d-flex justify-content-center align-items-center"
+        style={{ height: "86vh" }}
+      >
         <div
           className="card text-black border-0 shadow-lg"
           style={{ backgroundColor: "#ff803e", display: "inline-block", whiteSpace: "nowrap" }}

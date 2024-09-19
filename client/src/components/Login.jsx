@@ -13,23 +13,42 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    const validateEmail = (email) => {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailPattern.test(email);
+    };
+
+    if (!email.trim() && !password.trim()) {
+      return toast.error("Email & password are required!");
+    }
+    if (!email.trim()) {
+      return toast.error("Email is required!");
+    }
+    if (email && !validateEmail(email)) {
+      return toast.error("Invalid email id!");
+    }
+    if (!password.trim()) {
+      return toast.error("Password is required!");
+    }
+
     try {
       const response = await axios.post("http://localhost:8080/user/login", { email, password });
-      if (!email) return toast.error("Enter your email id.");
-      if (response && response.data.token) {
+
+      if (response.data && response.data.token) {
         const token = response.data.token;
         localStorage.setItem("token", token);
         login(token);
         toast.success(response.data.message);
         navigate("/dashboard");
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.message || "An error occurred!");
       }
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        toast.error(error.message);
+      if (error.response) {
+        const errorMessage = error.response.data.message || "An error occurred!";
+        toast.error(errorMessage);
       } else {
-        toast.error(error.message);
+        toast.error("Something went wrong. Please try again!");
       }
     }
   };
@@ -37,21 +56,33 @@ const Login = () => {
   const handleForgotPassword = async (e) => {
     e.preventDefault();
 
-    if (!email) {
-      toast.error("Email field is required");
-      return;
+    if (!email.trim()) {
+      return toast.error("Enter your email id!");
     }
 
     try {
       const response = await axios.post("http://localhost:8080/user/forgot-password", { email });
-      toast.success(response.data.message);
+
+      if (response.data && response.data.message) {
+        toast.success(response.data.message.message);
+      } else {
+        toast.error("An error occurred while sending the reset email.");
+      }
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message || "An error occurred!";
+        toast.error(errorMessage);
+      } else {
+        toast.error("Server error. Please try again later.");
+      }
     }
   };
 
   return (
-    <div className="bg-black text-white d-flex justify-content-center align-items-center vh-100">
+    <div
+      className="bg-black text-white d-flex justify-content-center align-items-center"
+      style={{ height: "86vh" }}
+    >
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6 col-xl-4">
@@ -62,15 +93,19 @@ const Login = () => {
               <div className="card-body">
                 <h1
                   className="text-center mb-4"
-                  style={{ color: "#000" }}
+                  style={{ color: "#000", fontSize: "2rem" }}
                 >
                   Login
                 </h1>
-                <form onSubmit={handleLogin}>
+                <form
+                  onSubmit={handleLogin}
+                  noValidate
+                >
                   <div className="mb-3">
                     <label
                       htmlFor="email"
                       className="form-label text-black"
+                      style={{ fontSize: "1rem" }}
                     >
                       Email
                     </label>
@@ -88,6 +123,7 @@ const Login = () => {
                     <label
                       htmlFor="password"
                       className="form-label text-black"
+                      style={{ fontSize: "1rem" }}
                     >
                       Password
                     </label>
@@ -102,7 +138,7 @@ const Login = () => {
                     />
                     <p
                       className="text-black text-start text-sm-end"
-                      style={{ marginTop: "5px" }}
+                      style={{ marginTop: "5px", fontSize: "0.875rem" }}
                     >
                       Don't you have an account?{" "}
                       <Link
@@ -117,6 +153,7 @@ const Login = () => {
                     <button
                       type="submit"
                       className="btn btn-warning w-100 bg-black text-white border-2 border-white mb-2 mb-sm-0"
+                      style={{ fontSize: "1rem" }}
                     >
                       Login
                     </button>
@@ -124,6 +161,7 @@ const Login = () => {
                       type="button"
                       onClick={handleForgotPassword}
                       className="btn btn-warning w-100 bg-black text-white border-2 border-white mt-2 mt-sm-0 ms-sm-2"
+                      style={{ fontSize: "1rem" }}
                     >
                       Forgot password
                     </button>

@@ -1,4 +1,3 @@
-// Starfield.js
 import React from "react";
 
 const generateStars = (numStars) => {

@@ -67,7 +67,12 @@ body {
 }
 
 input:focus {
-  border: 2px solid black;
+  border: 2px solid black !important;
+  transition: border-color 0.3s;
+}
+
+input:invalid {
+  border-color: red !important;
 }
 
 .card {

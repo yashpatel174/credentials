@@ -12,13 +12,16 @@ const ResetPassword = () => {
   const handleReset = async (e) => {
     e.preventDefault();
 
-    if (!password || !confirmPassword) {
-      toast.error("Fill the required fields.");
-      return;
+    if (!password && !confirmPassword) {
+      return toast.error("Both password fields are required.");
+    } else if (!password) {
+      return toast.error("Password field is required.");
+    } else if (!confirmPassword) {
+      return toast.error("Confirm password field is required.");
     }
 
-    if (password !== confirmPassword) {
-      return toast.error("Password does not match");
+    if (password && confirmPassword && password !== confirmPassword) {
+      return toast.error("Passwords do not match.");
     }
 
     try {
@@ -30,15 +33,22 @@ const ResetPassword = () => {
         confirmPassword,
       });
 
-      toast.error(response.message);
+      toast.success(response.data.message.message);
       navigate("/login");
     } catch (error) {
-      toast.error(`Error: ${error.message}`);
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error("Link has been expired.");
+      } else {
+        toast.error(`Error: ${error.message}`);
+      }
     }
   };
 
   return (
-    <div className="bg-black text-white d-flex justify-content-center align-items-center vh-100">
+    <div
+      className="bg-black text-white d-flex justify-content-center align-items-center"
+      style={{ height: "86vh" }}
+    >
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-6 col-lg-4">
@@ -53,7 +63,7 @@ const ResetPassword = () => {
                 >
                   Reset Password
                 </h1>
-                <form>
+                <form novalidate>
                   <div className="mb-3">
                     <label
                       htmlFor="password"

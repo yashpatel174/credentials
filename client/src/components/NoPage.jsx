@@ -11,7 +11,10 @@ const NoPage = () => {
   redirect();
   return (
     <>
-      <div className="bg-black text-white d-flex justify-content-center align-items-center vh-100">
+      <div
+        className="bg-black text-white d-flex justify-content-center align-items-center"
+        style={{ height: "86vh" }}
+      >
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-md-6 col-lg-4">

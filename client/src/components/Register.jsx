@@ -11,9 +11,27 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    const validateEmail = (email) => {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailPattern.test(email);
+    };
+
+    if (!email.trim() && !password.trim()) {
+      return toast.error("Email & password are required!");
+    }
+    if (!email.trim()) {
+      return toast.error("Email is required!");
+    }
+    if (email && !validateEmail(email)) {
+      return toast.error("Invalid email id!");
+    }
+    if (!password.trim()) {
+      return toast.error("Password is required!");
+    }
+
     try {
       const response = await axios.post("http://localhost:8080/user/register", { email, password });
-      toast.success(response.data.message);
+      toast.success(response.data.message.message);
       navigate("/login");
     } catch (error) {
       if (error.response) {
@@ -25,10 +43,13 @@ const Register = () => {
   };
   return (
     <>
-      <div className="bg-black text-white d-flex justify-content-center align-items-center vh-100">
+      <div
+        className="bg-black text-white d-flex justify-content-center align-items-center"
+        style={{ height: "86vh" }}
+      >
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col-md-6 col-lg-4">
+            <div className="col-12 col-md-8 col-lg-6 col-xl-4">
               <div
                 className="card text-black border-0 shadow-lg"
                 style={{ backgroundColor: "#ff803e" }}
@@ -36,21 +57,25 @@ const Register = () => {
                 <div className="card-body">
                   <h1
                     className="text-center mb-4"
-                    style={{ color: "#000" }}
+                    style={{ color: "#000", fontSize: "2rem" }}
                   >
                     Register
                   </h1>
-                  <form onSubmit={handleRegister}>
+                  <form
+                    onSubmit={handleRegister}
+                    noValidate
+                  >
                     <div className="mb-3">
                       <label
                         htmlFor="email"
                         className="form-label text-black"
+                        style={{ fontSize: "1rem" }}
                       >
                         Email
                       </label>
                       <input
                         type="text"
-                        className="form-control bg-white text-black custom-focus"
+                        className="form-control bg-white text-black"
                         id="email"
                         name="email"
                         value={email}
@@ -67,7 +92,7 @@ const Register = () => {
                       </label>
                       <input
                         type="password"
-                        className="form-control bg-white text-black custom-focus"
+                        className="form-control bg-white text-black"
                         id="password"
                         name="password"
                         value={password}
@@ -75,13 +100,13 @@ const Register = () => {
                         required
                       />
                       <p
-                        className="text-black text-end"
-                        style={{ marginTop: "5px" }}
+                        className="text-black text-start text-sm-end"
+                        style={{ marginTop: "5px", fontSize: "0.875rem" }}
                       >
                         Already have an account?{" "}
                         <Link
                           to="/login"
-                          className=" text-decoration-none"
+                          className="text-decoration-none"
                         >
                           Login
                         </Link>{" "}

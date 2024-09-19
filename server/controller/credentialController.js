@@ -15,17 +15,21 @@ const register = async (req, res) => {
     requiredFields(res, { email }, { password });
 
     const existingUser = await registration.findOne({ email });
-    if (existingUser) return response.exist(res);
+    if (existingUser) return response.custom(res, { message: "This email is already registered!" });
 
     const newUser = new registration({ email, password });
     await newUser.save();
 
-    response.success(res, "User registered successfully", { email: newUser.email, password: newUser.password });
+    response.success(res, {
+      message: "User registered successfully!",
+      email: newUser.email,
+      password: newUser.password,
+    });
   } catch (error) {
     if (error.code === 11000) {
-      return response.error(error, "Duplocate key.");
+      return response.error(res, error, { message: "Duplicate key." });
     }
-    response.error(res, error, "Error while reigstering user.");
+    response.error(res, error, { message: "Error while reigstering user." });
   }
 };
 
@@ -35,38 +39,38 @@ const login = async (req, res) => {
     requiredFields(res, { email }, { password });
 
     const user = await registration.findOne({ email });
-    if (!user) return response.notExist(res);
+    if (!user) return response.custom(res, { message: "User not registered by this email." });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return response.inValid(res);
+    if (!isMatch) return response.custom(res, { message: "Invalid Password." });
 
     const token = JWT.sign({ _id: user._id }, process.env.SECRET_KEY, { expiresIn: "5d" });
     req.session.token = token;
     req.session.save((error) => {
       if (error) {
-        return response.error(res, error, "Token is not stored in the session storage.");
+        return response.error(res, error, { message: "Token is not stored in the session storage." });
       }
       res.json({ message: "User logged in successfully!", token: token });
     });
   } catch (error) {
-    response.error(res, error, "Error while logging in.");
+    response.error(res, error, { message: "Error while logging in." });
   }
 };
 
 const dashboard = async (req, res) => {
   try {
     const user = await req.user;
-    response.success(res, "Welcome to the dashboard!", user.email);
+    response.success(res, { message: "Welcome to the dashboard!" }, user.email);
   } catch (error) {
-    response.error(res, error, "Try again.");
+    response.error(res, error, { message: "Error while fetching data, try again!" });
   }
 };
 
 const logout = (req, res) => {
   req.session.destroy((err) => {
-    if (err) return response.noLogOut(res);
+    if (err) return response.custom(res, { message: "Error while logging out!" });
     res.clearCookie("connect.sid");
-    response.success(res, "Logged out successfully!");
+    response.success(res, { message: "Logged out successfully!" });
   });
 };
 
@@ -86,7 +90,7 @@ const requestPasswordReset = async (req, res) => {
     requiredFields(res, { email });
 
     const user = await registration.findOne({ email });
-    if (!user) return response.notExist(res);
+    if (!user) return response.custom(res, { message: "This email is not registered!" });
 
     const token = JWT.sign({ _id: user._id }, process.env.SECRET_KEY, { expiresIn: "2m" });
     const resetLink = `http://localhost:3000/reset-password/${token}`;
@@ -107,7 +111,7 @@ const requestPasswordReset = async (req, res) => {
       subject: "Password Reset",
       text: `Click on the following link to reset your password: ${resetLink}`,
     });
-    response.success(res, { token: token });
+    response.success(res, { message: "Link has been sent successfully!", token: token });
   } catch (error) {
     response.error(res, error, { message: "Error while sending mail." });
   }
@@ -120,10 +124,12 @@ const resetPassword = async (req, res) => {
     requiredFields(res, { token }, { newPassword }, { confirmPassword });
 
     const decoded = await promisify(JWT.verify)(token, process.env.SECRET_KEY);
-    const user = await registration.findById(decoded._id);
-    if (!user) return response.notExist(res);
+    if (!decoded) return response.custom(res, { message: "Inalid token or token not found." });
 
-    if (newPassword !== confirmPassword) return response.notMatch(res);
+    const user = await registration.findById(decoded._id);
+    if (!user) return response.custom(res, { message: "This email is not registered!" });
+
+    if (newPassword !== confirmPassword) return response.custom({ res, message: "Password does not match" });
     user.password = newPassword;
 
     await user.save();

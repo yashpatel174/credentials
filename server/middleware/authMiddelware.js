@@ -5,8 +5,7 @@ import { registration } from "../model/credentialModel.js";
 export const authMiddleware = async (req, res, next) => {
   try {
     const token = req.header("Authorization") ? req.header("Authorization").replace("Bearer ", "") : req.session.token;
-    console.log(token, "backend middleware");
-    if (!token) return response.noToken(res);
+    if (!token) return response.custom(res, { message: "Token not provided or invalid token!" });
 
     const decode = JWT.verify(token, process.env.SECRET_KEY);
 
